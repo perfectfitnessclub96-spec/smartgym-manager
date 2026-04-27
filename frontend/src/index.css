@@ -4,20 +4,112 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-white text-gray-900;
   }
 }
 
 @layer components {
+  /* White Cards - Primary */
+  .card {
+    @apply bg-white rounded-2xl shadow-md border border-gray-200 p-6;
+  }
+  
+  /* Red Accent Card */
+  .card-red {
+    @apply bg-gradient-to-r from-red-600 to-red-700 rounded-2xl shadow-md p-6 text-white;
+  }
+  
+  /* Stats Cards - White */
+  .stat-card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all duration-300;
+  }
+  
+  /* Quick Action Cards - White */
+  .action-card {
+    @apply bg-white rounded-2xl p-4 text-center hover:shadow-md transition-all duration-300 border border-gray-200 hover:border-red-300;
+  }
+  
+  .action-card-icon {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3;
+  }
+  
+  .action-card-label {
+    @apply text-sm font-medium text-gray-800;
+  }
+  
+  /* Form Inputs */
+  .form-input {
+    @apply w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all text-gray-800 placeholder-gray-400;
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+  }
+  
+  /* Buttons - Red Secondary */
   .btn-primary {
-    @apply bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-all duration-200 font-semibold;
+    @apply bg-red-600 text-white px-6 py-3 rounded-xl hover:bg-red-700 transition-all duration-200 font-semibold shadow-md;
   }
   
   .btn-secondary {
-    @apply bg-white text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-50 transition-all duration-200 font-semibold border border-gray-200;
+    @apply bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition-all duration-200 font-semibold border border-gray-300;
   }
   
-  .card {
-    @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300;
+  .btn-outline {
+    @apply border-2 border-red-600 text-red-600 px-6 py-3 rounded-xl hover:bg-red-50 hover:text-red-700 transition-all duration-200 font-semibold;
   }
+  
+  /* Badges */
+  .badge-success {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800;
+  }
+  
+  .badge-warning {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800;
+  }
+  
+  .badge-danger {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800;
+  }
+  
+  .badge-info {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800;
+  }
+  
+  /* Sidebar */
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900;
+  }
+  
+  .sidebar-link-active {
+    @apply bg-red-600 text-white shadow-lg;
+  }
+  
+  /* Text Colors */
+  .text-primary {
+    @apply text-gray-800;
+  }
+  
+  .text-secondary {
+    @apply text-red-600;
+  }
+  
+  .text-tertiary {
+    @apply text-gray-500;
+  }
+  /* src/index.css - Add at the end of the file */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out forwards;
+}
 }

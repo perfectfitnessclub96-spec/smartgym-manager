@@ -5,9 +5,8 @@ import {
   getAvailableSlots,
   createBooking,
   getMyBookings,
-  getAllBookings,
   cancelBooking,
-  seedServices
+  getAllBookings
 } from '../controllers/bookingController';
 
 const router = express.Router();
@@ -17,12 +16,11 @@ router.get('/services', authenticate, getServices);
 router.get('/availability', authenticate, getAvailableSlots);
 
 // Member routes
-router.post('/bookings', authenticate, createBooking);
+router.post('/bookings', authenticate, requireMember, createBooking);
 router.get('/my-bookings', authenticate, requireMember, getMyBookings);
-router.put('/bookings/:id/cancel', authenticate, cancelBooking);
+router.put('/bookings/:id/cancel', authenticate, requireMember, cancelBooking);
 
 // Admin routes
-router.get('/bookings', authenticate, requireAdmin, getAllBookings);
-router.post('/seed-services', authenticate, requireAdmin, seedServices);
+router.get('/all', authenticate, requireAdmin, getAllBookings);
 
 export default router;

@@ -1,17 +1,22 @@
+// backend/src/models/Membership.ts
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IMembership extends Document {
   memberId: mongoose.Types.ObjectId;
   planId: mongoose.Types.ObjectId;
   startDate: Date;
-  endDate: Date;
+  expiryDate: Date;
   gracePeriodEnd?: Date;
   status: 'ACTIVE' | 'EXPIRED' | 'GRACE_PERIOD' | 'CANCELLED';
-  paymentAmount: number;
-  paymentMethod?: 'ONLINE' | 'CASH';
-  paymentId?: string;
-  paymentDate: Date;
-  invoiceNumber?: string;
+  amount: number;
+  lastReminderSent?: {
+    day7?: Date;
+    day3?: Date;
+    day2?: Date;
+    day1?: Date;
+    day0?: Date;
+  };
+  finalWarningSent?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -31,7 +36,7 @@ const MembershipSchema = new Schema({
     type: Date,
     required: true
   },
-  endDate: {
+  expiryDate: {
     type: Date,
     required: true
   },
@@ -41,20 +46,26 @@ const MembershipSchema = new Schema({
     enum: ['ACTIVE', 'EXPIRED', 'GRACE_PERIOD', 'CANCELLED'],
     default: 'ACTIVE'
   },
-  paymentAmount: {
+  amount: {
     type: Number,
     required: true
   },
-  paymentMethod: {
-    type: String,
-    enum: ['ONLINE', 'CASH']
+  lastReminderSent: {
+    day7: Date,
+    day3: Date,
+    day2: Date,
+    day1: Date,
+    day0: Date
   },
-  paymentId: String,
-  paymentDate: {
-    type: Date,
-    default: Date.now
-  },
-  invoiceNumber: String
+  finalWarningSent: {
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
+
+// Indexes for better query performance
+MembershipSchema.index({ expiryDate: 1, status: 1 });
+MembershipSchema.index({ memberId: 1, status: 1 });
+MembershipSchema.index({ expiryDate: 1, finalWarningSent: 1 });
 
 export default mongoose.model<IMembership>('Membership', MembershipSchema);

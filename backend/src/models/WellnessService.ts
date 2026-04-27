@@ -3,13 +3,12 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IWellnessService extends Document {
   name: string;
   description: string;
-  duration: number; // in minutes
+  duration: number;
   priceForMember: number;
   priceForGuest: number;
-  capacity: number; // max persons per slot
+  capacity: number;
   category: 'STEAM_BATH' | 'MASSAGE' | 'FOOT_THERAPY';
   isActive: boolean;
-  requiresPreBooking: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -43,10 +42,6 @@ const WellnessServiceSchema = new Schema({
     required: true
   },
   isActive: {
-    type: Boolean,
-    default: true
-  },
-  requiresPreBooking: {
     type: Boolean,
     default: true
   }
