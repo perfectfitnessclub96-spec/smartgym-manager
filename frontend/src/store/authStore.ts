@@ -1,72 +1,85 @@
+// src/store/authStore.ts
 import { create } from 'zustand';
-import axios from 'axios';
-
-// Fix: Remove /api from baseURL since it's already in the endpoint
-axios.defaults.baseURL = 'http://localhost:5000';
-axios.defaults.withCredentials = true;
+import axios from '../config/axios';
 
 interface User {
-  id: string;
-  mobileNumber: string;
+  id?: string;
+  memberId?: string;
+  email?: string;
+  name?: string;
   role: 'ADMIN' | 'MEMBER';
+  isFirstLogin?: boolean;
+  language?: string;
 }
 
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  sendOTP: (mobileNumber: string, role: string) => Promise<void>;
-  verifyOTP: (mobileNumber: string, otp: string) => Promise<void>;
+  language: string;
+  setAuth: (user: User) => void;
+  setLanguage: (lang: string) => void;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
-  setAuth: (user: User) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
   isLoading: true,
+  language: localStorage.getItem('preferredLanguage') || 'en',
 
-  sendOTP: async (mobileNumber, role) => {
-    await axios.post('/api/auth/send-otp', { mobileNumber, role });
+  setAuth: (user: User) => {
+    console.log('Setting auth state for user:', user);
+    localStorage.setItem('user', JSON.stringify(user));
+    set({ user, isAuthenticated: true });
   },
 
-  verifyOTP: async (mobileNumber, otp) => {
-    const response = await axios.post('/api/auth/verify-otp', { mobileNumber, otp });
-    if (response.data.user) {
-      set({ user: response.data.user, isAuthenticated: true });
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-    }
+  setLanguage: (lang: string) => {
+    localStorage.setItem('preferredLanguage', lang);
+    set({ language: lang });
   },
 
   logout: async () => {
-    await axios.post('/api/auth/logout');
+    try {
+      await axios.post('/api/auth/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
     localStorage.removeItem('user');
     set({ user: null, isAuthenticated: false });
   },
 
   checkAuth: async () => {
     const storedUser = localStorage.getItem('user');
+    
     if (storedUser) {
-      set({ user: JSON.parse(storedUser), isAuthenticated: true, isLoading: false });
-      return;
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        console.log('Found stored user:', parsedUser);
+        set({ user: parsedUser, isAuthenticated: true });
+      } catch (e) {
+        console.error('Error parsing stored user');
+      }
     }
     
     try {
       const response = await axios.get('/api/auth/me');
+      console.log('Auth check response:', response.data);
       if (response.data.user) {
-        set({ user: response.data.user, isAuthenticated: true, isLoading: false });
+        set({ user: response.data.user, isAuthenticated: true });
         localStorage.setItem('user', JSON.stringify(response.data.user));
       } else {
-        set({ isLoading: false });
+        // Clear invalid state
+        localStorage.removeItem('user');
+        set({ user: null, isAuthenticated: false });
       }
     } catch (error) {
+      console.error('Auth check error:', error);
+      localStorage.removeItem('user');
+      set({ user: null, isAuthenticated: false });
+    } finally {
       set({ isLoading: false });
     }
-  },
-
-  setAuth: (user: User) => {
-    set({ user, isAuthenticated: true });
-    localStorage.setItem('user', JSON.stringify(user));
   }
 }));

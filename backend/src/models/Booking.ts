@@ -8,18 +8,8 @@ export interface IBooking extends Document {
   bookingDate: Date;
   startTime: Date;
   endTime: Date;
-  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED' | 'NO_SHOW';
-  paymentStatus: 'PENDING' | 'PAID' | 'REFUNDED';
+  status: 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
   amount: number;
-  cancellationCharge?: number;
-  cancelledAt?: Date;
-  isWalkIn: boolean;
-  notificationSent: {
-    bookingConfirmation: boolean;
-    dayBeforeReminder: boolean;
-    twoHourReminder: boolean;
-    cancellationConfirmation: boolean;
-  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -50,35 +40,19 @@ const BookingSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED', 'NO_SHOW'],
+    enum: ['CONFIRMED', 'CANCELLED', 'COMPLETED'],
     default: 'CONFIRMED'
-  },
-  paymentStatus: {
-    type: String,
-    enum: ['PENDING', 'PAID', 'REFUNDED'],
-    default: 'PENDING'
   },
   amount: {
     type: Number,
     required: true
-  },
-  cancellationCharge: Number,
-  cancelledAt: Date,
-  isWalkIn: {
-    type: Boolean,
-    default: false
-  },
-  notificationSent: {
-    bookingConfirmation: { type: Boolean, default: false },
-    dayBeforeReminder: { type: Boolean, default: false },
-    twoHourReminder: { type: Boolean, default: false },
-    cancellationConfirmation: { type: Boolean, default: false }
   }
 }, { timestamps: true });
 
-// Indexes for performance
+// Add indexes for better query performance
 BookingSchema.index({ bookingDate: 1, startTime: 1, serviceId: 1 });
 BookingSchema.index({ memberId: 1, status: 1 });
-BookingSchema.index({ startTime: 1 });
+BookingSchema.index({ status: 1, bookingDate: 1 });
+BookingSchema.index({ startTime: 1 }); // For reminder queries
 
 export default mongoose.model<IBooking>('Booking', BookingSchema);

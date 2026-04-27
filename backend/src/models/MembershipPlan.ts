@@ -2,10 +2,9 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IMembershipPlan extends Document {
   name: string;
-  duration: 'MONTHLY' | 'QUARTERLY' | 'HALF_YEARLY' | 'YEARLY';
+  duration: 'MONTHLY' | 'QUARTERLY' | 'HALF_YEARLY' | 'YEARLY' | 'COUPLE';
   durationInDays: number;
   price: number;
-  features: string[];
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -18,7 +17,7 @@ const MembershipPlanSchema = new Schema({
   },
   duration: {
     type: String,
-    enum: ['MONTHLY', 'QUARTERLY', 'HALF_YEARLY', 'YEARLY'],
+    enum: ['MONTHLY', 'QUARTERLY', 'HALF_YEARLY', 'YEARLY', 'COUPLE'],
     required: true
   },
   durationInDays: {
@@ -29,7 +28,6 @@ const MembershipPlanSchema = new Schema({
     type: Number,
     required: true
   },
-  features: [String],
   isActive: {
     type: Boolean,
     default: true
