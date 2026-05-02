@@ -317,6 +317,14 @@ export default function ManageEquipment() {
 
   const totalMachines = equipment.length;
   const totalCategories = new Set(equipment.map(e => e.category)).size;
+  
+  // ✅ FIXED: Calculate actual machines added this month
+  const addedThisMonth = equipment.filter(e => {
+    const createdAt = new Date(e.createdAt);
+    const now = new Date();
+    return createdAt.getMonth() === now.getMonth() && 
+           createdAt.getFullYear() === now.getFullYear();
+  }).length;
 
   return (
     <div className="min-h-screen bg-white" key={renderKey}>
@@ -351,7 +359,7 @@ export default function ManageEquipment() {
         </header>
 
         <main className="p-6">
-          {/* Stats Cards */}
+          {/* Stats Cards - ALL REAL DATA NOW */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between">
@@ -379,7 +387,8 @@ export default function ManageEquipment() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-500 text-sm">{getText('equipment.stats.addedThisMonth', 'Added This Month')}</p>
-                  <p className="text-2xl font-bold text-gray-800 mt-1">{totalMachines}</p>
+                  {/* ✅ FIXED: Shows actual count, not totalMachines */}
+                  <p className="text-2xl font-bold text-gray-800 mt-1">{addedThisMonth}</p>
                 </div>
                 <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center">
                   <Clock className="text-purple-600" size={22} />
@@ -388,7 +397,7 @@ export default function ManageEquipment() {
             </div>
           </div>
 
-          {/* Search and Filter Bar */}
+          {/* Search and Filter Bar - Works on REAL data */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-6">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1 relative">
@@ -442,7 +451,7 @@ export default function ManageEquipment() {
             </div>
           </div>
 
-          {/* Equipment List */}
+          {/* Equipment List - ALL REAL DATA from API */}
           {filteredEquipment.length === 0 ? (
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
               <Dumbbell className="mx-auto text-gray-300 mb-4" size={64} />
@@ -539,7 +548,7 @@ export default function ManageEquipment() {
         </main>
       </div>
 
-      {/* Add/Edit Machine Modal */}
+      {/* Add/Edit Machine Modal - REST OF THE CODE REMAINS THE SAME */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">

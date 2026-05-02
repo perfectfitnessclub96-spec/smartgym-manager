@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import AdminUser from '../models/AdminUser';
 import Member from '../models/Member';
+import Membership from '../models/Membership'; // ✅ ADDED - Import Membership model
 import { sendWelcomeEmail } from '../services/emailService';
 import { runManualCleanup } from '../jobs/cleanupExpiredMembersJob';
 
@@ -224,5 +225,38 @@ export const getTodaysBirthdays = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error fetching birthdays:', error);
     res.status(500).json({ message: 'Error fetching birthdays', error });
+  }
+};
+
+// ✅ ADDED - Force update expired memberships (Admin only)
+export const forceExpiryUpdate = async (req: Request, res: Response) => {
+  try {
+    const currentAdminId = (req as any).adminId;
+    const currentAdmin = await AdminUser.findById(currentAdminId);
+    
+    // Check if user has admin access
+    if (currentAdmin?.role !== 'SUPER_ADMIN' && currentAdmin?.role !== 'ADMIN') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+    
+    const today = new Date();
+    const result = await Membership.updateMany(
+      { 
+        status: 'ACTIVE', 
+        expiryDate: { $lt: today } 
+      },
+      { $set: { status: 'EXPIRED' } }
+    );
+    
+    console.log(`🔧 Force expiry update: ${result.modifiedCount} memberships marked as EXPIRED by ${currentAdmin.email || currentAdmin.name}`);
+    
+    res.json({ 
+      success: true, 
+      message: `${result.modifiedCount} memberships marked as expired`,
+      modifiedCount: result.modifiedCount
+    });
+  } catch (error) {
+    console.error('Error in force expiry update:', error);
+    res.status(500).json({ message: 'Error updating expired memberships' });
   }
 };

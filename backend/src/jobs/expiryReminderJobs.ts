@@ -102,15 +102,32 @@ const updateExpiredMemberships = async () => {
   }
 };
 
-// Schedule the jobs to run daily at 9:00 AM
+// ✅ UPDATED - Schedule jobs to run at IST timezone (India Standard Time)
+// IST = UTC + 5:30
+// 12:00 AM IST = 6:30 PM UTC previous day
+// 9:00 AM IST = 3:30 AM UTC
+// 1:00 PM IST = 7:30 AM UTC
 export const startExpiryReminderJobs = () => {
-  cron.schedule('0 9 * * *', async () => {
-    console.log('🕐 Running scheduled expiry reminder job...');
+  // Run at 12:00 AM IST (midnight) - to mark expired memberships
+  cron.schedule('30 18 * * *', async () => {
+    console.log('🕐 [IST 12:00 AM] Running expiry cleanup job...');
+    await updateExpiredMemberships();
+  });
+  
+  // Run at 9:00 AM IST - to send reminders
+  cron.schedule('30 3 * * *', async () => {
+    console.log('🕐 [IST 9:00 AM] Running expiry reminder job...');
     await checkAndSendExpiryReminders();
     await updateExpiredMemberships();
   });
   
-  console.log('✅ Expiry reminder jobs scheduled (runs daily at 9:00 AM)');
+  // Run at 1:00 PM IST - midday check
+  cron.schedule('30 7 * * *', async () => {
+    console.log('🕐 [IST 1:00 PM] Running midday expiry check...');
+    await updateExpiredMemberships();
+  });
+  
+  console.log('✅ Expiry reminder jobs scheduled (IST timezone - runs at 12:00 AM, 9:00 AM, and 1:00 PM)');
 };
 
 // For testing purposes

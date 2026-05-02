@@ -54,44 +54,44 @@ export default function Notifications() {
         {
           id: 'holiday',
           name: 'सुट्टीची सूचना',
-          title: '🏋️ जिम सुट्टीची सूचना',
+          title: ' जिम सुट्टीची सूचना',
           message: 'प्रिय सदस्यांनो,\n\n[तारीख] रोजी [कारण] साठी जिम बंद राहील.\n\nतुम्हाला सुट्टीच्या हार्दिक शुभेच्छा!\n\nसमजून घेतल्याबद्दल धन्यवाद.',
-          icon: '🎉'
+          
         },
         {
           id: 'maintenance',
           name: 'देखभाल सूचना',
-          title: '🔧 नियोजित देखभाल',
+          title: ' नियोजित देखभाल',
           message: 'प्रिय सदस्यांनो,\n\n[तारीख] रोजी [वेळ] ते [वेळ] दरम्यान जिमची नियोजित देखभाल केली जाईल.\n\nगैरसोयीबद्दल क्षमस्व.\n\nतुमच्या सहकार्याबद्दल धन्यवाद.',
-          icon: '🔧'
+          
         },
         {
           id: 'offer',
           name: 'विशेष ऑफर',
-          title: '🎁 विशेष सदस्यत्व ऑफर',
+          title: ' विशेष सदस्यत्व ऑफर',
           message: 'प्रिय सदस्यांनो,\n\nवार्षिक सदस्यत्वावर [सवलत]% सवलत मिळवा! ऑफर [तारीख] पर्यंत वैध.\n\nअधिक माहितीसाठी फ्रंट डेस्कशी संपर्क साधा.\n\nघाई करा! मर्यादित कालावधीची ऑफर.',
-          icon: '🎁'
+          
         },
         {
           id: 'event',
           name: 'फिटनेस इव्हेंट',
-          title: '💪 फिटनेस चॅलेंज इव्हेंट',
+          title: ' फिटनेस चॅलेंज इव्हेंट',
           message: 'प्रिय सदस्यांनो,\n\n[तारीख] रोजी [वेळ] ला आमच्या फिटनेस चॅलेंजमध्ये सहभागी व्हा.\n\nविजेत्यांसाठी बक्षिसे आणि प्रमाणपत्रे!\n\nफ्रंट डेस्कवर नोंदणी करा.',
-          icon: '🏆'
+          
         },
         {
           id: 'workshop',
           name: 'कार्यशाळा',
-          title: '🧘 योग कार्यशाळा',
+          title: ' योग कार्यशाळा',
           message: 'प्रिय सदस्यांनो,\n\n[तारीख] रोजी [वेळ] ला विशेष योग कार्यशाळा.\n\nतज्ञ प्रशिक्षकांकडून शिका.\n\nमर्यादित जागा. आत्ताच नोंदणी करा!',
-          icon: '🧘'
+          
         },
         {
           id: 'reminder',
           name: 'शुल्क स्मरणपत्र',
-          title: '⏰ सदस्यत्व नूतनीकरण स्मरणपत्र',
+          title: ' सदस्यत्व नूतनीकरण स्मरणपत्र',
           message: 'प्रिय सदस्यांनो,\n\nतुमचे सदस्यत्व लवकरच संपत आहे. कृपया [तारीख] पूर्वी नूतनीकरण करा.\n\nसहाय्यासाठी फ्रंट डेस्कशी संपर्क साधा.\n\nधन्यवाद!',
-          icon: '⏰'
+      
         }
       ];
     }
@@ -101,44 +101,43 @@ export default function Notifications() {
       {
         id: 'holiday',
         name: 'Holiday Notice',
-        title: '🏋️ Gym Holiday Notice',
+        title: ' Gym Holiday Notice',
         message: 'Dear members,\n\nThe gym will remain closed on [DATE] due to [OCCASION].\n\nWe wish you a happy holiday!\n\nThank you for your understanding.',
-        icon: '🎉'
+       
       },
       {
         id: 'maintenance',
         name: 'Maintenance Alert',
-        title: '🔧 Scheduled Maintenance',
+        title: ' Scheduled Maintenance',
         message: 'Dear members,\n\nThe gym will undergo scheduled maintenance on [DATE] from [TIME] to [TIME].\n\nWe apologize for the inconvenience.\n\nThank you for your cooperation.',
-        icon: '🔧'
+        
       },
       {
         id: 'offer',
         name: 'Special Offer',
-        title: '🎁 Special Membership Offer',
-        message: 'Dear members,\n\nGet [DISCOUNT]% off on annual membership! Offer valid till [DATE].\n\nContact front desk for more details.\n\nHurry up! Limited period offer.',
-        icon: '🎁'
+        title: ' Special Membership Offer',
+        message: 'Dear members,\n\nGet [DISCOUNT]% off on annual membership! Offer valid till [DATE].\n\nContact front desk for more details.\n\nHurry up! Limited period offer.', 
       },
       {
         id: 'event',
         name: 'Fitness Event',
-        title: '💪 Fitness Challenge Event',
+        title: ' Fitness Challenge Event',
         message: 'Dear members,\n\nJoin our fitness challenge on [DATE] at [TIME].\n\nPrizes and certificates for winners!\n\nRegister at the front desk.',
-        icon: '🏆'
+        
       },
       {
         id: 'workshop',
         name: 'Workshop',
-        title: '🧘 Yoga Workshop',
+        title: ' Yoga Workshop',
         message: 'Dear members,\n\nSpecial yoga workshop on [DATE] at [TIME].\n\nLearn from expert trainers.\n\nLimited seats available. Register now!',
-        icon: '🧘'
+        
       },
       {
         id: 'reminder',
         name: 'Fee Reminder',
-        title: '⏰ Membership Renewal Reminder',
+        title: ' Membership Renewal Reminder',
         message: 'Dear members,\n\nYour membership is expiring soon. Please renew before [DATE] to avoid interruption.\n\nContact front desk for assistance.\n\nThank you!',
-        icon: '⏰'
+        
       }
     ];
   };
@@ -415,7 +414,7 @@ export default function Notifications() {
                         />
                       </div>
                       <p className="text-xs text-gray-500 mt-2">
-                        💡 {getText('notifications.placeholderTip', 'Tip: Use placeholders like [DATE], [TIME], [DISCOUNT] for easy customization')}
+                         {getText('notifications.placeholderTip', 'Tip: Use placeholders like [DATE], [TIME], [DISCOUNT] for easy customization')}
                       </p>
                     </div>
 
@@ -454,7 +453,7 @@ export default function Notifications() {
                             </div>
                             <div className="h-px bg-gray-100 my-3"></div>
                             <div className="text-xs text-gray-400">
-                              📅 {new Date().toLocaleDateString()} • 📍 Perfect Fitness Club
+                               {new Date().toLocaleDateString()} • 📍 Perfect Fitness Club
                             </div>
                           </div>
                         </div>

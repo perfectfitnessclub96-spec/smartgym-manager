@@ -12,6 +12,7 @@ import helmet from 'helmet';
 
 import { errorHandler } from './middleware/errorHandler';
 import { apiLimiter, authLimiter } from './middleware/rateLimiter';
+import Membership from './models/Membership';  // ✅ ADDED - Import Membership model
 import { startReminderJobs } from './jobs/reminderJobs';
 import { startExpiryReminderJobs } from './jobs/expiryReminderJobs';
 import { startCleanupJob } from './jobs/cleanupExpiredMembersJob';
@@ -200,9 +201,26 @@ app.use(errorHandler);
 // MongoDB connection
 const MONGODB_URI = config.mongodbUri;
 
+// ✅ UPDATED - Added async and startup cleanup
 mongoose.connect(MONGODB_URI)
-  .then(() => {
+  .then(async () => {
     console.log('✅ MongoDB connected successfully');
+    
+    // ✅ ADDED - Run once on startup to clean expired memberships
+    try {
+      const today = new Date();
+      const result = await Membership.updateMany(
+        { 
+          status: 'ACTIVE', 
+          expiryDate: { $lt: today } 
+        },
+        { $set: { status: 'EXPIRED' } }
+      );
+      console.log(`✅ Startup cleanup: ${result.modifiedCount} memberships marked as EXPIRED`);
+    } catch (error) {
+      console.error('❌ Startup cleanup error:', error);
+    }
+    
     startReminderJobs();
     startExpiryReminderJobs();
     startCleanupJob();

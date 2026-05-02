@@ -74,7 +74,7 @@ const getOTPTemplate = (otp: string, name: string) => {
 </head>
 <body>
   <div class="container">
-    <div class="header"><h1>🏋️ Kartiki Enterprises</h1></div>
+    <div class="header"><h1>Perfect Fitness Club</h1></div>
     <div class="content">
       <h2>Hello ${sanitizedName},</h2>
       <p>Your verification code is:</p>
@@ -82,7 +82,7 @@ const getOTPTemplate = (otp: string, name: string) => {
       <p>This code is valid for <strong>5 minutes</strong>.</p>
       <p>If you didn't request this, please ignore this email.</p>
     </div>
-    <div class="footer"><p>&copy; 2025 Kartiki Enterprises. All rights reserved.</p></div>
+    <div class="footer"><p>&copy; 2025 Perfect Fitness Club. All rights reserved.</p></div>
   </div>
 </body>
 </html>
@@ -97,7 +97,7 @@ const getWelcomeTemplate = (name: string) => {
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Welcome to Kartiki Enterprises</title>
+  <title>Welcome to Perfect Fitness Club</title>
   <style>
     body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
     .container { max-width: 500px; margin: 0 auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -108,10 +108,10 @@ const getWelcomeTemplate = (name: string) => {
 </head>
 <body>
   <div class="container">
-    <div class="header"><h1>🎉 Welcome to Kartiki Enterprises!</h1></div>
+    <div class="header"><h1>🎉 Welcome to Perfect Fitness Club!</h1></div>
     <div class="content">
       <h2>Hello ${sanitizedName},</h2>
-      <p>Your membership has been successfully created at <strong>Kartiki Enterprises Fitness Club</strong>!</p>
+      <p>Your membership has been successfully created at <strong>Perfect Fitness Club</strong>!</p>
       <p>You can now login to your account using your email address. A One-Time Password (OTP) will be sent to this email each time you login.</p>
       <p><strong>Features available to you:</strong></p>
       <ul>
@@ -122,11 +122,12 @@ const getWelcomeTemplate = (name: string) => {
         <li>📱 Access member portal</li>
       </ul>
       <p>We're excited to have you as part of our fitness family!</p>
-      <p>Best regards,<br><strong>Kartiki Enterprises Team</strong></p>
+      <p>Best regards,<br><strong>Perfect Fitness Club Team</strong></p>
     </div>
     <div class="footer">
-      <p>&copy; 2025 Kartiki Enterprises. All rights reserved.</p>
-      <p>Kolwadi, Maharashtra - 412110 | +91 98765 43210</p>
+      <p>&copy; 2025 Perfect Fitness Club. All rights reserved.</p>
+      <p>Kolwadi, Maharashtra - 412110 </p> 
+      <p>+91 87888 64345</p>
     </div>
   </div>
 </body>
@@ -192,7 +193,7 @@ const getExpiryReminderTemplate = (name: string, planName: string, daysRemaining
 <body>
   <div class="container">
     <div class="header">
-      <h1>🏋️ Kartiki Enterprises</h1>
+      <h1>Perfect Fitness Club</h1>
     </div>
     <div class="content">
       <h2>Dear ${sanitizedName},</h2>
@@ -200,11 +201,12 @@ const getExpiryReminderTemplate = (name: string, planName: string, daysRemaining
       <p>${message}</p>
       <p><strong>Plan:</strong> ${sanitizedPlanName}</p>
       <p><strong>Expiry Date:</strong> ${expiryDate.toLocaleDateString()}</p>
-      <p>Best regards,<br><strong>Kartiki Enterprises Team</strong></p>
+      <p>Best regards,<br><strong>Perfect Fitness Club Team</strong></p>
     </div>
     <div class="footer">
-      <p>&copy; 2025 Kartiki Enterprises. All rights reserved.</p>
-      <p>Kolwadi, Maharashtra - 412110 | +91 98765 43210</p>
+      <p>&copy; 2025 Perfect Fitness Club. All rights reserved.</p>
+      <p>Kolwadi, Maharashtra - 412110 </p> 
+      <p>+91 87888 64345</p>
     </div>
   </div>
 </body>
@@ -238,14 +240,15 @@ const getBirthdayTemplate = (name: string, age: number) => {
     <div class="content">
       <div class="cake">🎂 🎈 🎉</div>
       <h2>Dear ${sanitizedName},</h2>
-      <p>Wishing you a very <strong>Happy Birthday</strong> from the entire team at <strong>Kartiki Enterprises Fitness Club</strong>!</p>
+      <p>Wishing you a very <strong>Happy Birthday</strong> from the entire team at <strong>Perfect Fitness Club</strong>!</p>
       ${age > 0 ? `<p>May your ${age}th year bring you good health, happiness, and success!</p>` : ''}
       <p>We are grateful to have you as a valued member of our fitness family.</p>
-      <p>Best regards,<br><strong>Kartiki Enterprises Team</strong></p>
+      <p>Best regards,<br><strong>Perfect Fitness Club Team</strong></p>
     </div>
     <div class="footer">
-      <p>&copy; 2025 Kartiki Enterprises. All rights reserved.</p>
-      <p>Kolwadi, Maharashtra - 412110 | +91 98765 43210</p>
+      <p>&copy; 2025 Perfect Fitness Club. All rights reserved.</p>
+      <p>Kolwadi, Maharashtra - 412110 </p> 
+      <p>+91 87888 64345</p>
     </div>
   </div>
 </body>
@@ -275,7 +278,7 @@ const getBookingConfirmationTemplate = (name: string, serviceName: string, date:
 <body>
   <div class="container">
     <div class="header">
-      <h1>🏋️ Kartiki Enterprises</h1>
+      <h1> Perfect Fitness Club</h1>
       <p>Booking Confirmation</p>
     </div>
     <div class="content">
@@ -288,11 +291,12 @@ const getBookingConfirmationTemplate = (name: string, serviceName: string, date:
         <p><strong>Amount:</strong> Free for Members</p>
       </div>
       <p>Please arrive 10 minutes before your appointment.</p>
-      <p>Best regards,<br><strong>Kartiki Enterprises Team</strong></p>
+      <p>Best regards,<br><strong>Perfect Fitness Club Team</strong></p>
     </div>
     <div class="footer">
-      <p>&copy; 2025 Kartiki Enterprises. All rights reserved.</p>
-      <p>Kolwadi, Maharashtra - 412110 | +91 98765 43210</p>
+      <p>&copy; 2025 Perfect Fitness Club. All rights reserved.</p>
+      <p>Kolwadi, Maharashtra - 412110 </p> 
+      <p>+91 87888 64345</p>
     </div>
   </div>
 </body>
@@ -322,7 +326,7 @@ const getCancellationTemplate = (name: string, serviceName: string, date: string
 <body>
   <div class="container">
     <div class="header">
-      <h1>🏋️ Kartiki Enterprises</h1>
+      <h1>Perfect Fitness Club</h1>
       <p>Booking Cancelled</p>
     </div>
     <div class="content">
@@ -335,11 +339,12 @@ const getCancellationTemplate = (name: string, serviceName: string, date: string
       </div>
       <p>No cancellation fee applied.</p>
       <p>We hope to see you again soon!</p>
-      <p>Best regards,<br><strong>Kartiki Enterprises Team</strong></p>
+      <p>Best regards,<br><strong>Perfect Fitness Club Team</strong></p>
     </div>
     <div class="footer">
-      <p>&copy; 2025 Kartiki Enterprises. All rights reserved.</p>
-      <p>Kolwadi, Maharashtra - 412110 | +91 98765 43210</p>
+      <p>&copy; 2025 Perfect Fitness Club. All rights reserved.</p>
+      <p>Kolwadi, Maharashtra - 412110 </p> 
+      <p>+91 87888 64345</p>
     </div>
   </div>
 </body>
@@ -374,14 +379,14 @@ const getRenewalRequestTemplate = (name: string, planName: string, isAdmin: bool
 </head>
 <body>
   <div class="container">
-    <div class="header"><h1>🏋️ Kartiki Enterprises</h1></div>
+    <div class="header"><h1>Perfect Fitness Club</h1></div>
     <div class="content">
       <h2>${greeting}</h2>
       <p>${message}</p>
       <p>Plan: <strong>${sanitizedPlanName}</strong></p>
-      <p>Best regards,<br><strong>Kartiki Enterprises Team</strong></p>
+      <p>Best regards,<br><strong>Perfect Fitness Club Team</strong></p>
     </div>
-    <div class="footer"><p>&copy; 2025 Kartiki Enterprises. All rights reserved.</p></div>
+    <div class="footer"><p>&copy; 2025 Perfect Fitness Club. All rights reserved.</p></div>
   </div>
 </body>
 </html>
@@ -416,7 +421,7 @@ const getRenewalStatusTemplate = (name: string, planName: string, status: string
 </head>
 <body>
   <div class="container">
-    <div class="header"><h1>🏋️ Kartiki Enterprises</h1></div>
+    <div class="header"><h1>Perfect Fitness Club</h1></div>
     <div class="content">
       <h2>Dear ${sanitizedName},</h2>
       <p>Your renewal request for the <strong>${sanitizedPlanName}</strong> plan has been:</p>
@@ -425,9 +430,9 @@ const getRenewalStatusTemplate = (name: string, planName: string, status: string
       </div>
       <p>${statusMessage}</p>
       ${sanitizedNotes ? `<p><strong>Reason:</strong> ${sanitizedNotes}</p>` : ''}
-      <p>Best regards,<br><strong>Kartiki Enterprises Team</strong></p>
+      <p>Best regards,<br><strong>Perfect Fitness Club Team</strong></p>
     </div>
-    <div class="footer"><p>&copy; 2025 Kartiki Enterprises. All rights reserved.</p></div>
+    <div class="footer"><p>&copy; 2025 Perfect Fitness Club. All rights reserved.</p></div>
   </div>
 </body>
 </html>
@@ -442,7 +447,7 @@ const getFinalWarningTemplate = (name: string, expiryDate: Date) => {
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>⚠️ URGENT: Your Account Will Be Deleted in 2 Days</title>
+  <title> URGENT: Your Account Will Be Deleted in 2 Days</title>
   <style>
     body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
     .container { max-width: 500px; margin: 0 auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -454,11 +459,11 @@ const getFinalWarningTemplate = (name: string, expiryDate: Date) => {
 </head>
 <body>
   <div class="container">
-    <div class="header"><h1>🏋️ Kartiki Enterprises</h1></div>
+    <div class="header"><h1>Perfect Fitness Club</h1></div>
     <div class="content">
       <h2>Dear ${sanitizedName},</h2>
       <div class="warning">
-        <strong>⚠️ URGENT: ACCOUNT DELETION WARNING</strong>
+        <strong> URGENT: ACCOUNT DELETION WARNING</strong>
       </div>
       <p>Your membership expired on <strong>${expiryDate.toLocaleDateString()}</strong>. You have not renewed your membership yet.</p>
       <p><strong>If you do not renew your membership within the next 2 days, your account and all associated data will be permanently deleted from our system.</strong></p>
@@ -469,9 +474,9 @@ const getFinalWarningTemplate = (name: string, expiryDate: Date) => {
         <li>Complete the payment process</li>
       </ol>
       <p>Don't let your fitness journey end! Renew today to continue enjoying our facilities and services.</p>
-      <p>Best regards,<br><strong>Kartiki Enterprises Team</strong></p>
+      <p>Best regards,<br><strong>Perfect Fitness Club Team</strong></p>
     </div>
-    <div class="footer"><p>&copy; 2025 Kartiki Enterprises. All rights reserved.</p></div>
+    <div class="footer"><p>&copy; 2025 Perfect Fitness Club. All rights reserved.</p></div>
   </div>
 </body>
 </html>
@@ -485,19 +490,19 @@ export const sendOTPEmail = async (email: string, otp: string, name: string): Pr
   try {
     if (!transporter || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.log(`\n=================================`);
-      console.log(`📧 [DEV MODE] OTP to: ${email}`);
-      console.log(`🔑 Your OTP is: ${otp}`);
+      console.log(` [DEV MODE] OTP to: ${email}`);
+      console.log(` Your OTP is: ${otp}`);
       console.log(`=================================\n`);
       return true;
     }
     
     await transporter.sendMail({
-      from: `"Kartiki Enterprises" <${process.env.SMTP_USER}>`,
+      from: `"Perfect Fitness Club" <${process.env.SMTP_USER}>`,
       to: email,
       subject: 'Your OTP Verification Code',
       html: getOTPTemplate(otp, name),
     });
-    console.log(`✅ OTP email sent to ${email}`);
+    console.log(` OTP email sent to ${email}`);
     return true;
   } catch (error) {
     console.error('Error sending OTP email:', error);
@@ -510,18 +515,18 @@ export const sendWelcomeEmail = async (email: string, name: string): Promise<boo
   try {
     if (!transporter || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.log(`\n=================================`);
-      console.log(`📧 [DEV MODE] Welcome Email to: ${email}`);
+      console.log(` [DEV MODE] Welcome Email to: ${email}`);
       console.log(`=================================\n`);
       return true;
     }
     
     await transporter.sendMail({
-      from: `"Kartiki Enterprises" <${process.env.SMTP_USER}>`,
+      from: `"Perfect Fitness Club" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: 'Welcome to Kartiki Enterprises Fitness Club!',
+      subject: 'Welcome to Perfect Fitness Club!',
       html: getWelcomeTemplate(name),
     });
-    console.log(`✅ Welcome email sent to ${email}`);
+    console.log(` Welcome email sent to ${email}`);
     return true;
   } catch (error) {
     console.error('Error sending welcome email:', error);
@@ -534,7 +539,7 @@ export const sendMembershipExpiryReminder = async (email: string, name: string, 
   try {
     if (!transporter || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.log(`\n=================================`);
-      console.log(`📧 [DEV MODE] Expiry Reminder to: ${email}`);
+      console.log(` [DEV MODE] Expiry Reminder to: ${email}`);
       console.log(`Days Remaining: ${daysRemaining}`);
       console.log(`=================================\n`);
       return true;
@@ -547,12 +552,12 @@ export const sendMembershipExpiryReminder = async (email: string, name: string, 
                     '❌ Your Gym Membership Has Expired';
     
     await transporter.sendMail({
-      from: `"Kartiki Enterprises" <${process.env.SMTP_USER}>`,
+      from: `"Perfect Fitness Club" <${process.env.SMTP_USER}>`,
       to: email,
       subject: subject,
       html: getExpiryReminderTemplate(name, planName, daysRemaining, expiryDate),
     });
-    console.log(`✅ Expiry reminder email sent to ${email} (${daysRemaining} days remaining)`);
+    console.log(` Expiry reminder email sent to ${email} (${daysRemaining} days remaining)`);
     return true;
   } catch (error) {
     console.error('Error sending expiry reminder email:', error);
@@ -569,7 +574,7 @@ export const sendBulkEmail = async (email: string, name: string, title: string, 
 
     if (!transporter || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.log(`\n=================================`);
-      console.log(`📧 [DEV MODE] Email to: ${email}`);
+      console.log(` [DEV MODE] Email to: ${email}`);
       console.log(`Subject: ${sanitizedTitle}`);
       console.log(`Message: ${sanitizedMessage}`);
       console.log(`=================================\n`);
@@ -593,17 +598,18 @@ export const sendBulkEmail = async (email: string, name: string, title: string, 
 <body>
   <div class="container">
     <div class="header">
-      <h1>🏋️ Kartiki Enterprises</h1>
+      <h1>Perfect Fitness Club</h1>
     </div>
     <div class="content">
       <h2>Hello ${sanitizedName},</h2>
       <h3 style="color: #ef4444;">${sanitizedTitle}</h3>
       <div style="white-space: pre-wrap; line-height: 1.6;">${sanitizedMessage}</div>
-      <p style="margin-top: 20px;">Best regards,<br><strong>Kartiki Enterprises Team</strong></p>
+      <p style="margin-top: 20px;">Best regards,<br><strong>Perfect Fitness Club Team</strong></p>
     </div>
     <div class="footer">
-      <p>&copy; 2025 Kartiki Enterprises. All rights reserved.</p>
-      <p>Kolwadi, Maharashtra - 412110 | +91 98765 43210</p>
+      <p>&copy; 2025 Perfect Fitness Club. All rights reserved.</p>
+      <p>Kolwadi, Maharashtra - 412110 </p> 
+      <p>+91 87888 64345</p>
     </div>
   </div>
 </body>
@@ -611,12 +617,12 @@ export const sendBulkEmail = async (email: string, name: string, title: string, 
     `;
 
     await transporter.sendMail({
-      from: `"Kartiki Enterprises" <${process.env.SMTP_USER}>`,
+      from: `"Perfect Fitness Club" <${process.env.SMTP_USER}>`,
       to: email,
       subject: sanitizedTitle,
       html,
     });
-    console.log(`✅ Email sent to ${email}`);
+    console.log(` Email sent to ${email}`);
     return true;
   } catch (error) {
     console.error('Error sending email:', error);
@@ -629,7 +635,7 @@ export const sendBirthdayEmail = async (email: string, name: string, age: number
   try {
     if (!transporter || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.log(`\n=================================`);
-      console.log(`📧 [DEV MODE] Birthday Email to: ${email}`);
+      console.log(` [DEV MODE] Birthday Email to: ${email}`);
       console.log(`Happy Birthday ${name}! 🎂`);
       console.log(`=================================\n`);
       return true;
@@ -637,7 +643,7 @@ export const sendBirthdayEmail = async (email: string, name: string, age: number
     
     const subject = `🎂 Happy Birthday, ${name}! 🎉`;
     await transporter.sendMail({
-      from: `"Kartiki Enterprises" <${process.env.SMTP_USER}>`,
+      from: `"Perfect Fitness Club" <${process.env.SMTP_USER}>`,
       to: email,
       subject: subject,
       html: getBirthdayTemplate(name, age),
@@ -658,13 +664,13 @@ export const sendRenewalRequestEmail = async (email: string, name: string, planN
     
     if (!transporter || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.log(`\n=================================`);
-      console.log(`📧 [DEV MODE] ${subject} to: ${email}`);
+      console.log(` [DEV MODE] ${subject} to: ${email}`);
       console.log(`=================================\n`);
       return true;
     }
     
     await transporter.sendMail({
-      from: `"Kartiki Enterprises" <${process.env.SMTP_USER}>`,
+      from: `"Perfect Fitness Club" <${process.env.SMTP_USER}>`,
       to: email,
       subject: subject,
       html: getRenewalRequestTemplate(name, planName, isAdmin, memberName),
@@ -682,14 +688,14 @@ export const sendRenewalStatusEmail = async (email: string, name: string, planNa
   try {
     if (!transporter || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.log(`\n=================================`);
-      console.log(`📧 [DEV MODE] Renewal Status Email to: ${email}`);
+      console.log(` [DEV MODE] Renewal Status Email to: ${email}`);
       console.log(`Status: ${status}`);
       console.log(`=================================\n`);
       return true;
     }
     
     await transporter.sendMail({
-      from: `"Kartiki Enterprises" <${process.env.SMTP_USER}>`,
+      from: `"Perfect Fitness Club" <${process.env.SMTP_USER}>`,
       to: email,
       subject: `Renewal Request ${status === 'APPROVED' ? 'Approved' : 'Rejected'}`,
       html: getRenewalStatusTemplate(name, planName, status, notes),
@@ -707,14 +713,14 @@ export const sendFinalWarningEmail = async (email: string, name: string, expiryD
   try {
     if (!transporter || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.log(`\n=================================`);
-      console.log(`📧 [DEV MODE] FINAL WARNING to: ${email}`);
+      console.log(` [DEV MODE] FINAL WARNING to: ${email}`);
       console.log(`Account will be deleted in 2 days`);
       console.log(`=================================\n`);
       return true;
     }
     
     await transporter.sendMail({
-      from: `"Kartiki Enterprises" <${process.env.SMTP_USER}>`,
+      from: `"Perfect Fitness Club" <${process.env.SMTP_USER}>`,
       to: email,
       subject: '⚠️ URGENT: Your Account Will Be Deleted in 2 Days',
       html: getFinalWarningTemplate(name, expiryDate),
@@ -732,16 +738,16 @@ export const sendBookingConfirmationEmail = async (email: string, name: string, 
   try {
     if (!transporter || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.log(`\n=================================`);
-      console.log(`📧 [DEV MODE] Booking Confirmation to: ${email}`);
+      console.log(` [DEV MODE] Booking Confirmation to: ${email}`);
       console.log(`Service: ${serviceName} on ${date} at ${time}`);
       console.log(`=================================\n`);
       return true;
     }
     
     await transporter.sendMail({
-      from: `"Kartiki Enterprises" <${process.env.SMTP_USER}>`,
+      from: `"Perfect Fitness Club" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: 'Booking Confirmation - Kartiki Enterprises',
+      subject: 'Booking Confirmation - Perfect Fitness Club',
       html: getBookingConfirmationTemplate(name, serviceName, date, time),
     });
     console.log(`✅ Booking confirmation email sent to ${email}`);
@@ -757,16 +763,16 @@ export const sendCancellationEmail = async (email: string, name: string, service
   try {
     if (!transporter || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.log(`\n=================================`);
-      console.log(`📧 [DEV MODE] Cancellation Email to: ${email}`);
+      console.log(` [DEV MODE] Cancellation Email to: ${email}`);
       console.log(`Service: ${serviceName} on ${date} at ${time}`);
       console.log(`=================================\n`);
       return true;
     }
     
     await transporter.sendMail({
-      from: `"Kartiki Enterprises" <${process.env.SMTP_USER}>`,
+      from: `"Perfect Fitness Club" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: 'Booking Cancelled - Kartiki Enterprises',
+      subject: 'Booking Cancelled - Perfect Fitness Club',
       html: getCancellationTemplate(name, serviceName, date, time),
     });
     console.log(`✅ Cancellation email sent to ${email}`);

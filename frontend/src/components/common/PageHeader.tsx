@@ -1,6 +1,6 @@
 // src/components/common/PageHeader.tsx
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, RefreshCw, User } from 'lucide-react';
+import { ArrowLeft, RefreshCw, User, Clock } from 'lucide-react'; // ✅ ADDED - Import Clock icon
 import { useAuthStore } from '../../store/authStore';
 
 interface PageHeaderProps {
@@ -9,6 +9,7 @@ interface PageHeaderProps {
   showBackButton?: boolean;
   onRefresh?: () => void;
   refreshing?: boolean;
+  onForceExpiry?: () => void; // ✅ ADDED - New prop for force expiry
 }
 
 export default function PageHeader({ 
@@ -16,7 +17,8 @@ export default function PageHeader({
   subtitle, 
   showBackButton = false, 
   onRefresh, 
-  refreshing = false 
+  refreshing = false,
+  onForceExpiry  // ✅ ADDED - Destructure the new prop
 }: PageHeaderProps) {
   const navigate = useNavigate();
   const { user } = useAuthStore();
@@ -40,6 +42,16 @@ export default function PageHeader({
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {/* ✅ ADDED - Force Expiry Button */}
+            {onForceExpiry && (
+              <button 
+                onClick={onForceExpiry} 
+                className="p-2 hover:bg-gray-100 rounded-lg transition"
+                title="Force update expired memberships"
+              >
+                <Clock size={18} className="text-orange-500" />
+              </button>
+            )}
             {onRefresh && (
               <button 
                 onClick={onRefresh} 

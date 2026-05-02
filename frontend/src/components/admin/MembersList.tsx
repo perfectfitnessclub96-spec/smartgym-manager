@@ -1,8 +1,8 @@
 // src/components/admin/MembersList.tsx
 import { useEffect, useState } from 'react';
-import { Search, Eye, UserPlus, Phone, Mail, RefreshCw, Award, Clock, CheckCircle, AlertCircle, ArrowLeft, Users, MoreVertical, Edit, Trash2 } from 'lucide-react';
+import { Search, Eye, UserPlus, Phone, Mail, RefreshCw, Clock, CheckCircle, AlertCircle, Users } from 'lucide-react';
 import axios from '../../config/axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import Sidebar from '../common/Sidebar';
 import PageHeader from '../common/PageHeader';
@@ -34,7 +34,6 @@ interface Member {
 export default function MembersList() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const location = useLocation();
   const { logout, user } = useAuthStore();
   const { showError } = useToast();
   const [members, setMembers] = useState<Member[]>([]);
@@ -44,7 +43,6 @@ export default function MembersList() {
   const [refreshing, setRefreshing] = useState(false);
   const [renderKey, setRenderKey] = useState(0);
 
-  // Force re-render on language change
   useEffect(() => {
     const handleLanguageChange = () => {
       setRenderKey(prev => prev + 1);
@@ -110,7 +108,15 @@ export default function MembersList() {
     }
   };
 
-  // Calculate stats using real-time status
+  const getInitials = (name: string) => {
+    if (!name) return 'U';
+    const nameParts = name.trim().split(' ');
+    if (nameParts.length === 1) {
+      return nameParts[0].charAt(0).toUpperCase();
+    }
+    return (nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)).toUpperCase();
+  };
+
   const stats = {
     total: members.length,
     activeCount: members.filter(m => {
@@ -232,9 +238,9 @@ export default function MembersList() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredMembers.map((member) => {
-                const statusInfo = getMembershipStatusInfo(member.currentMembership?.expiryDate);
-                const planName = member.currentMembership?.planId?.name || 'No Plan';
                 const expiryDate = member.currentMembership?.expiryDate;
+                const statusInfo = getMembershipStatusInfo(expiryDate);
+                const planName = member.currentMembership?.planId?.name || 'No Plan';
                 
                 return (
                   <div key={member._id} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300">
@@ -245,16 +251,16 @@ export default function MembersList() {
                     
                     <div className="p-5">
                       <div className="flex items-start gap-4 mb-4">
-                        <img 
-                          src={member.photo || `https://ui-avatars.com/api/?background=ef4444&color=fff&name=${encodeURIComponent(member.name)}&length=2&size=60&font-size=0.24&bold=true`} 
-                          alt={member.name}
-                          className="w-14 h-14 rounded-full object-cover border-2 border-gray-200"
-                        />
+                        <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shadow-md border-2 border-gray-200">
+                          <span className="text-white text-xl font-bold">
+                            {getInitials(member.name)}
+                          </span>
+                        </div>
                         <div className="flex-1">
                           <h3 className="font-bold text-gray-800 text-lg">{member.name}</h3>
                           <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
                             <Phone size={12} />
-                            <span>{member.mobileNumber}</span>
+                            <span>{member.mobileNumber || 'N/A'}</span>
                           </div>
                           <div className="flex items-center gap-2 mt-0.5 text-sm text-gray-500">
                             <Mail size={12} />

@@ -16,6 +16,7 @@ export default function LandingPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [logoError, setLogoError] = useState(false); 
 
   // Refs for scroll animations
   const whyUsRef = useRef<HTMLElement>(null);
@@ -59,8 +60,8 @@ export default function LandingPage() {
         if (ref.current) {
           const rect = ref.current.getBoundingClientRect();
           const isVisible = rect.top < windowHeight - 100 && rect.bottom > 100;
-          if (isVisible && !visibleSections[name]) {
-            newVisibility[name] = true;
+          if (isVisible && !visibleSections[name as keyof typeof visibleSections]) {
+            newVisibility[name as keyof typeof visibleSections] = true;
           }
         }
       });
@@ -78,42 +79,42 @@ export default function LandingPage() {
     { 
       name: "PREMIUM TREADMILLS", 
       categories: ["CARDIO", "RUNNING"], 
-      image: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=600&h=400&fit=crop",
+      image: "https://i.pinimg.com/1200x/80/7a/59/807a59aa74c23dcbeed35104f1547337.jpg",
       description: "Latest technology with heart rate monitoring and incline control",
       icon: <Activity size={20} />
     },
     { 
       name: "SMITH MACHINE", 
       categories: ["STRENGTH", "POWERLIFTING"], 
-      image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&h=400&fit=crop",
+      image: "https://i.pinimg.com/1200x/e2/df/de/e2dfdea694be924c1b904e1e5ffdab47.jpg",
       description: "Commercial grade strength training with safety locks",
       icon: <Dumbbell size={20} />
     },
     { 
       name: "DUMBBELLS SET", 
       categories: ["FREE WEIGHTS", "STRENGTH"], 
-      image: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=600&h=400&fit=crop",
+      image: "https://i.pinimg.com/1200x/5b/ef/2c/5bef2c7a9194a11dcf9eb3e1a5eec37e.jpg",
       description: "2kg to 50kg pairs available with rack storage",
       icon: <Target size={20} />
     },
     { 
       name: "FUNCTIONAL TRAINING", 
       categories: ["TRAINING", "HIIT"], 
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop",
+      image: "https://i.pinimg.com/1200x/4a/b9/32/4ab932cf13dca94a9822e191eef8b0a6.jpg",
       description: "Kettlebells, battle ropes, TRX, medicine balls & plyo boxes",
       icon: <Flame size={20} />
     },
     { 
       name: "CARDIO ZONE", 
       categories: ["CARDIO", "ENDURANCE"], 
-      image: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&h=400&fit=crop",
+      image: "https://i.pinimg.com/736x/2d/ad/82/2dad82e9b128e2cd7734c6f0d427b574.jpg",
       description: "Premium treadmills, ellipticals, cycles & rowing machines",
       icon: <HeartPulse size={20} />
     },
     { 
       name: "PREMIUM LOCKER ROOM", 
       categories: ["FACILITIES", "CHANGING ROOM"], 
-      image: "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=600&h=400&fit=crop",
+      image: "https://i.pinimg.com/1200x/d9/d0/52/d9d0520b4580b116df30ee62c164cd5c.jpg",
       description: "Spacious lockers, premium showers & modern changing area",
       icon: <Droplets size={20} />
     }
@@ -161,15 +162,23 @@ export default function LandingPage() {
     }
   ];
 
+// ✅ FIXED - Logo Component with working image
   const Logo = () => (
-    <div className="flex items-center gap-2 group">
-      <div className="bg-red-600 p-2 rounded-lg shadow-md transition-all duration-300 group-hover:shadow-red-500/30 group-hover:scale-105">
-        <Dumbbell className="text-white" size={24} />
-      </div>
-      <div>
-        <span className="text-xl font-bold tracking-wide text-black">KARTIKI</span>
-        <span className="text-xl font-bold tracking-wide text-red-600"> ENTERPRISES</span>
-        <p className="text-[10px] tracking-[0.2em] text-gray-500">FITNESS CLUB</p>
+  <div className="flex items-center gap-2 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+    {!logoError ? (
+      <img 
+        src="/logo.png" 
+        alt="Gym Logo" 
+        className="w-10 h-10 object-contain transition-all duration-300 group-hover:scale-105"
+        onError={() => setLogoError(true)}
+      />
+    ) : (
+      <Dumbbell className="text-red-600" size={28} />
+    )}
+    <div>
+        <span className="text-xl font-bold tracking-wide text-black">PERFECT</span>
+        <span className="text-xl font-bold tracking-wide text-red-600"> FITNESS </span>
+        <p className="text-[10px] tracking-[0.2em] text-gray-500">CLUB</p>
       </div>
     </div>
   );
@@ -224,13 +233,13 @@ export default function LandingPage() {
                 onClick={() => navigate('/member-login')}
                 className="px-5 py-2 text-xs tracking-wide text-red-600 border-2 border-red-600 hover:bg-red-50 hover:border-red-700 transition-all duration-300 font-semibold rounded-lg hover:shadow-md"
               >
-                MEMBER LOGIN
+                MEMBER
               </button>
               <button
                 onClick={() => navigate('/admin-login')}
                 className="px-5 py-2 text-xs tracking-wide bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-300 font-semibold rounded-lg shadow-md hover:shadow-lg"
               >
-                ADMIN LOGIN
+                ADMIN 
               </button>
             </div>
 
@@ -262,13 +271,13 @@ export default function LandingPage() {
                   onClick={() => navigate('/member-login')}
                   className="flex-1 py-2 text-xs tracking-wide text-red-600 border-2 border-red-600 hover:bg-red-50 transition-all duration-300 font-semibold rounded-lg"
                 >
-                  MEMBER LOGIN
+                  MEMBER
                 </button>
                 <button
                   onClick={() => navigate('/admin-login')}
                   className="flex-1 py-2 text-xs tracking-wide bg-red-600 text-white hover:bg-red-700 transition-all duration-300 font-semibold rounded-lg"
                 >
-                  ADMIN LOGIN
+                  ADMIN 
                 </button>
               </div>
             </div>
@@ -307,7 +316,7 @@ export default function LandingPage() {
                 onClick={() => navigate('/member-login')}
                 className="group px-8 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-300 font-semibold text-sm tracking-wide rounded-lg hover:scale-105 hover:shadow-xl flex items-center gap-2"
               >
-                MEMBER LOGIN
+                MEMBER
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
               <button
@@ -320,11 +329,11 @@ export default function LandingPage() {
 
             <div className="flex gap-8 mt-12 pt-8 border-t border-white/10">
               <div>
-                <p className="text-2xl font-bold text-white">500+</p>
+                <p className="text-2xl font-bold text-white">600+</p>
                 <p className="text-xs text-gray-400">Active Members</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">50+</p>
+                <p className="text-2xl font-bold text-white">30+</p>
                 <p className="text-xs text-gray-400">Equipment</p>
               </div>
               <div>
@@ -514,14 +523,11 @@ export default function LandingPage() {
                 Built to help members stay consistent with quality training space, disciplined environment, and modern systems.
               </p>
               <p className="text-gray-600 leading-relaxed">
-                Kartiki Enterprises Fitness Club provides a premium workout environment with state-of-the-art equipment, 
+                Perfect Fitness Club provides a premium workout environment with state-of-the-art equipment, 
                 professional guidance, and a supportive community. Our mission is to help you achieve your fitness goals 
                 through consistency, discipline, and modern fitness management systems.
               </p>
               <div className="flex gap-4 pt-4">
-                <button onClick={() => navigate('/member-login')} className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold text-sm">
-                  Join Now
-                </button>
                 <button onClick={() => scrollToSection('timings')} className="px-6 py-2.5 border-2 border-red-600 text-red-600 rounded-lg hover:bg-red-50 transition font-semibold text-sm">
                   Visit Us
                 </button>
@@ -607,7 +613,7 @@ export default function LandingPage() {
               <div className="space-y-4">
                 <p className="text-gray-700 flex items-start gap-2">
                   <MapPin size={16} className="text-red-500 mt-0.5 flex-shrink-0" />
-                  <span>Kartiki Enterprises, Kolwadi, Maharashtra - 412110</span>
+                  <span>Kartiki Enterprises(Perfect Fitness Club), Kolwadi, Maharashtra - 412110</span>
                 </p>
                 <div className="rounded-xl overflow-hidden shadow-md h-64 w-full">
                   <iframe 
@@ -617,7 +623,7 @@ export default function LandingPage() {
                     style={{ border: 0 }}
                     allowFullScreen 
                     loading="lazy"
-                    title="Kartiki Enterprises Gym Location"
+                    title="Perfect Fitness Club Location"
                   ></iframe>
                 </div>
                 <p className="text-xs text-gray-500 flex items-center gap-1">
@@ -656,130 +662,98 @@ export default function LandingPage() {
               LOGIN
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
-            <button
-              onClick={() => navigate('/member-login')}
-              className="group px-8 py-3.5 bg-red-800 text-white hover:bg-red-950 transition-all duration-300 font-semibold text-sm tracking-wide rounded-xl hover:scale-105 hover:shadow-2xl flex items-center gap-2 border border-white/20"
-            >
-              ACCESS PORTAL
-              <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </button>
           </div>
         </div>
       </section>
 
-      {/* CTA Footer */}
-      <section 
-        ref={ctaRef}
-        className={`py-24 px-4 bg-black relative overflow-hidden transition-all duration-700 ${
-          visibleSections.cta ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}
-      >
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-3xl lg:text-5xl font-bold text-white tracking-tight mb-6">
-            START YOUR FITNESS JOURNEY TODAY
-          </h2>
-          <p className="text-gray-400 mb-10 text-lg">
-            Visit the gym or contact us to learn more about our membership plans.
-          </p>
-          <div className="flex flex-wrap gap-5 justify-center">
-            <button
-              onClick={() => scrollToSection('timings')}
-              className="group px-8 py-3.5 bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-300 font-semibold text-sm tracking-wide rounded-xl hover:scale-105 hover:shadow-xl flex items-center gap-2"
-            >
-              CONTACT
-              <Phone size={16} className="group-hover:scale-110 transition-transform" />
-            </button>
-            <button
-              onClick={() => scrollToSection('timings')}
-              className="group px-8 py-3.5 border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 font-semibold text-sm tracking-wide rounded-xl hover:scale-105 flex items-center gap-2"
-            >
-              VISIT US
-              <MapPin size={16} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+{/* Footer */}
+<footer className="py-16 px-4 bg-black border-t border-gray-800">
+  <div className="max-w-7xl mx-auto">
+    <div className="grid md:grid-cols-4 gap-10">
+      <div>
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            {!logoError ? (
+              <img 
+                src="/logo.png" 
+                alt="Gym Logo" 
+                className="w-8 h-8 object-contain"
+                onError={() => setLogoError(true)}
+              />
+            ) : (
+              <Dumbbell className="text-red-500" size={22} />
+            )}
+            <div>
+              <span className="text-xl font-bold tracking-wide text-white">PERFECT</span>
+              <span className="text-xl font-bold tracking-wide text-red-600"> FITNESS</span>
+              <p className="text-[10px] tracking-[0.2em] text-gray-400">CLUB</p>
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-16 px-4 bg-black border-t border-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-10">
-            <div>
-              <div className="mb-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="bg-red-600 p-2 rounded-lg shadow-md">
-                    <Dumbbell className="text-white" size={24} />
-                  </div>
-                  <div>
-                    <span className="text-xl font-bold tracking-wide text-white">KARTIKI</span>
-                    <span className="text-xl font-bold tracking-wide text-red-600"> ENTERPRISES</span>
-                    <p className="text-[10px] tracking-[0.2em] text-gray-400">FITNESS CLUB</p>
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-400 text-xs leading-relaxed tracking-wide">
-                Kartiki Enterprises, Kolwadi - Your journey to a healthier you starts here.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-white tracking-wide mb-5 relative inline-block">
-                QUICK LINKS
-                <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-red-600"></span>
-              </h4>
-              <ul className="space-y-3 text-gray-400 text-xs tracking-wide">
-                <li><button onClick={() => scrollToSection('home')} className="hover:text-red-400 transition-colors duration-300 flex items-center gap-1 group"> <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" /> HOME</button></li>
-                <li><button onClick={() => scrollToSection('equipment')} className="hover:text-red-400 transition-colors duration-300 flex items-center gap-1 group"> <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" /> FACILITIES</button></li>
-                <li><button onClick={() => scrollToSection('member-portal')} className="hover:text-red-400 transition-colors duration-300 flex items-center gap-1 group"> <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" /> MEMBER PORTAL</button></li>
-                <li><button onClick={() => scrollToSection('timings')} className="hover:text-red-400 transition-colors duration-300 flex items-center gap-1 group"> <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" /> TIMINGS</button></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-white tracking-wide mb-5 relative inline-block">
-                CONTACT INFO
-                <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-red-600"></span>
-              </h4>
-              <ul className="space-y-4 text-gray-400 text-xs tracking-wide">
-                <li className="flex items-start gap-3 hover:text-white transition-colors duration-300 group">
-                  <MapPin size={14} className="text-red-500 mt-0.5 group-hover:scale-110 transition-transform flex-shrink-0" /> 
-                  <span>KOLWADI, MAHARASHTRA - 412110</span>
-                </li>
-                <li className="flex items-center gap-3 hover:text-white transition-colors duration-300 group">
-                  <Phone size={14} className="text-red-500 group-hover:scale-110 transition-transform" /> 
-                  <span>+91 98765 43210</span>
-                </li>
-                <li className="flex items-center gap-3 hover:text-white transition-colors duration-300 group">
-                  <Mail size={14} className="text-red-500 group-hover:scale-110 transition-transform" /> 
-                  <span>INFO@KARTIKIENTERPRISES.COM</span>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-white tracking-wide mb-5 relative inline-block">
-                FOLLOW US
-                <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-red-600"></span>
-              </h4>
-              <div className="flex gap-4">
-                <a href="#" className="w-10 h-10 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white transition-all duration-300 hover:scale-110">
-                  <Instagram size={18} />
-                </a>
-                <a href="#" className="w-10 h-10 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white transition-all duration-300 hover:scale-110">
-                  <Facebook size={18} />
-                </a>
-                <a href="#" className="w-10 h-10 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white transition-all duration-300 hover:scale-110">
-                  <Twitter size={18} />
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-10 pt-8 text-center text-gray-500 text-[10px] tracking-wide">
-            <p>&copy; 2024 KARTIKI ENTERPRISES. ALL RIGHTS RESERVED. | KOLWADI, MAHARASHTRA - 412110</p>
-          </div>
+        <p className="text-gray-400 text-xs leading-relaxed tracking-wide">
+          Perfect Fitness Club, Kolwadi - Your journey to a healthier you starts here.
+        </p>
+      </div>
+      <div>
+        <h4 className="text-xs font-bold text-white tracking-wide mb-5 relative inline-block">
+          QUICK LINKS
+          <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-red-600"></span>
+        </h4>
+        <ul className="space-y-3 text-gray-400 text-xs tracking-wide">
+          <li><button onClick={() => scrollToSection('home')} className="hover:text-red-400 transition-colors duration-300 flex items-center gap-1 group"> <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" /> HOME</button></li>
+          <li><button onClick={() => scrollToSection('equipment')} className="hover:text-red-400 transition-colors duration-300 flex items-center gap-1 group"> <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" /> FACILITIES</button></li>
+          <li><button onClick={() => scrollToSection('member-portal')} className="hover:text-red-400 transition-colors duration-300 flex items-center gap-1 group"> <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" /> MEMBER PORTAL</button></li>
+          <li><button onClick={() => scrollToSection('timings')} className="hover:text-red-400 transition-colors duration-300 flex items-center gap-1 group"> <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" /> TIMINGS</button></li>
+        </ul>
+      </div>
+      <div>
+        <h4 className="text-xs font-bold text-white tracking-wide mb-5 relative inline-block">
+          CONTACT INFO
+          <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-red-600"></span>
+        </h4>
+        <ul className="space-y-4 text-gray-400 text-xs tracking-wide">
+          <li className="flex items-start gap-3 hover:text-white transition-colors duration-300 group">
+            <MapPin size={14} className="text-red-500 mt-0.5 group-hover:scale-110 transition-transform flex-shrink-0" /> 
+            <span>KOLWADI, MAHARASHTRA - 412110</span>
+          </li>
+          <li className="flex items-center gap-3 hover:text-white transition-colors duration-300 group">
+            <Phone size={14} className="text-red-500 group-hover:scale-110 transition-transform" /> 
+            <span>+91 8788864345</span>
+          </li>
+          <li className="flex items-center gap-3 hover:text-white transition-colors duration-300 group">
+            <Mail size={14} className="text-red-500 group-hover:scale-110 transition-transform" /> 
+            <span>perfectfitnessclub96@gmail.com</span>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h4 className="text-xs font-bold text-white tracking-wide mb-5 relative inline-block">
+          FOLLOW US
+          <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-red-600"></span>
+        </h4>
+        <div className="flex gap-4">
+          <a 
+            href="https://www.instagram.com/_perfectfitnessclub?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-10 h-10 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white transition-all duration-300 hover:scale-110"
+          >
+            <Instagram size={18} />
+          </a>
         </div>
-      </footer>
+      </div>
+    </div>
+    <div className="border-t border-gray-800 mt-10 pt-8 text-center text-gray-500 text-[10px] tracking-wide">
+      <p>&copy; 2024 PERFECT FITNESS CLUB. ALL RIGHTS RESERVED. | KOLWADI, MAHARASHTRA - 412110</p>
+    </div>
+  </div>
+</footer>
 
       {/* Back to Top Button */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        title="Back to top"
+        aria-label="Back to top"
         className={`fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-red-600 text-white shadow-lg transition-all duration-300 hover:bg-red-700 hover:scale-110 flex items-center justify-center ${
           scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
         }`}

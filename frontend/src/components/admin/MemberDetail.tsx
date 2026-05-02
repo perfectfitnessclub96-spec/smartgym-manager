@@ -108,7 +108,7 @@ export default function MemberDetail() {
         setCurrentMembership(membershipData);
         setMembershipHistory(historyData);
         
-        // Calculate real-time status and days remaining
+        // Calculate real-time status and days remaining (NO DUMMY DATA)
         if (membershipData) {
           const today = new Date();
           today.setHours(0, 0, 0, 0);
@@ -386,7 +386,7 @@ export default function MemberDetail() {
                 </div>
               </div>
 
-              {/* Membership History Card */}
+              {/* Membership History Card - REAL DATA from API */}
               {membershipHistory.length > 0 && (
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                   <div className="flex items-center gap-2 mb-4">
@@ -490,20 +490,6 @@ export default function MemberDetail() {
                       </button>
                     </div>
                   )}
-                </div>
-              </div>
-
-              {/* Quick Actions */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-                <h4 className="font-semibold text-gray-800 mb-3">Quick Actions</h4>
-                <div className="space-y-2">
-                  <button 
-                    onClick={() => window.print()}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition text-sm font-medium"
-                  >
-                    <Printer size={16} />
-                    Print Details
-                  </button>
                 </div>
               </div>
             </div>

@@ -141,12 +141,25 @@ export default function Sidebar({ role, onLogout }: SidebarProps) {
     }
   };
 
-  // Logo Component - NOT CLICKABLE (removed onClick handler)
   const Logo = () => (
     <div className="flex items-center gap-3">
-      <div className="bg-red-600 p-2.5 rounded-xl shadow-md">
-        <Dumbbell className="text-white" size={24} />
-      </div>
+      <img
+        src="/logo.png"
+        alt="Gym Logo"
+        className="w-10 h-10 object-contain"
+        onError={(e) => {
+          (e.target as HTMLImageElement).style.display = 'none';
+          const parent = (e.target as HTMLImageElement).parentElement;
+          if (parent) {
+            const fallback = document.createElement('div');
+            fallback.className = 'bg-red-600 p-2 rounded-xl';
+            fallback.innerHTML = '💪';
+            fallback.style.fontSize = '20px';
+            fallback.style.color = 'white';
+            parent.appendChild(fallback);
+          }
+        }}
+      />
       <div>
         <span className="text-xl font-bold text-gray-800">Perfect</span>
         <span className="text-xl font-bold text-red-600"> Fitness</span>

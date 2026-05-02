@@ -7,7 +7,8 @@ import {
   updateAdmin,
   deleteAdmin,
   triggerCleanup,
-  getTodaysBirthdays
+  getTodaysBirthdays,
+  forceExpiryUpdate  // ✅ ADDED - Import the new function
 } from '../controllers/adminController';
 
 const router = express.Router();
@@ -27,6 +28,9 @@ router.post('/trigger-cleanup', triggerCleanup);
 
 // Birthdays route
 router.get('/birthdays/today', getTodaysBirthdays);
+
+// ✅ ADDED - Force update expired memberships
+router.post('/force-expiry-update', forceExpiryUpdate);
 
 router.get('/dashboard', (req, res) => {
   res.json({ message: 'Admin dashboard data' });

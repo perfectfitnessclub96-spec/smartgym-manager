@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import axios from '../../config/axios';
+import toast from 'react-hot-toast'; // ✅ ADDED - Import toast for notifications
 
 interface DashboardStats {
   totalMembers: number;
@@ -40,6 +41,8 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [renderKey, setRenderKey] = useState(0);
+  const [revenueData, setRevenueData] = useState<any[]>([]);
+  const [planDistribution, setPlanDistribution] = useState<any[]>([]);
 
   // Force re-render on language change
   useEffect(() => {
@@ -54,6 +57,8 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchStats();
+    fetchRevenueData();
+    fetchPlanDistribution();
   }, []);
 
   const fetchStats = async () => {
@@ -70,10 +75,62 @@ export default function AdminDashboard() {
     }
   };
 
+  const fetchRevenueData = async () => {
+    try {
+      const response = await axios.get('/api/membership/monthly-revenue');
+      if (response.data.success && response.data.data && response.data.data.length > 0) {
+        setRevenueData(response.data.data);
+      } else {
+        // Generate empty months if no data
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        setRevenueData(months.map(month => ({ month, revenue: 0 })));
+      }
+    } catch (error) {
+      console.error('Error fetching revenue data:', error);
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      setRevenueData(months.map(month => ({ month, revenue: 0 })));
+    }
+  };
+
+  const fetchPlanDistribution = async () => {
+    try {
+      const response = await axios.get('/api/membership/plan-distribution');
+      if (response.data.success && response.data.data && response.data.data.length > 0) {
+        setPlanDistribution(response.data.data);
+      } else {
+        setPlanDistribution([]);
+      }
+    } catch (error) {
+      console.error('Error fetching plan distribution:', error);
+      setPlanDistribution([]);
+    }
+  };
+
   const handleRefresh = async () => {
     setRefreshing(true);
     await fetchStats();
+    await fetchRevenueData();
+    await fetchPlanDistribution();
     setRefreshing(false);
+  };
+
+  // ✅ ADDED - Force update expired memberships
+  const handleForceExpiryUpdate = async () => {
+    if (!confirm('Force update expired memberships? This will mark all expired memberships as EXPIRED.')) {
+      return;
+    }
+    
+    try {
+      const response = await axios.post('/api/admin/force-expiry-update');
+      toast.success(response.data.message);
+      // Refresh all data after update
+      await fetchStats();
+      await fetchRevenueData();
+      await fetchPlanDistribution();
+    } catch (error: any) {
+      console.error('Error forcing expiry update:', error);
+      toast.error(error.response?.data?.message || 'Failed to update expired memberships');
+    }
   };
 
   const handleLogout = async () => {
@@ -92,16 +149,12 @@ export default function AdminDashboard() {
     }
   };
 
-  const revenueData = [
-    { month: getText('common.jan', 'Jan'), revenue: 25000 },
-    { month: getText('common.feb', 'Feb'), revenue: 32000 },
-    { month: getText('common.mar', 'Mar'), revenue: 38000 },
-    { month: getText('common.apr', 'Apr'), revenue: 45000 },
-    { month: getText('common.may', 'May'), revenue: 52000 },
-    { month: getText('common.jun', 'Jun'), revenue: 58000 }
-  ];
-
-  const membershipData = [
+  // Prepare membership data for pie chart from REAL plan distribution
+  const membershipData = planDistribution.length > 0 ? planDistribution.map(item => ({
+    name: item.name,
+    value: item.value,
+    color: item.color || '#ef4444'
+  })) : [
     { name: getText('common.active', 'Active'), value: stats.activeMemberships, color: '#22c55e' },
     { name: getText('common.inactive', 'Inactive'), value: Math.max(0, stats.totalMembers - stats.activeMemberships), color: '#ef4444' }
   ];
@@ -127,6 +180,7 @@ export default function AdminDashboard() {
           subtitle={`${getText('common.welcomeBack', 'Welcome back')}, ${user?.name || 'Admin'}! 👋`}
           onRefresh={handleRefresh}
           refreshing={refreshing}
+          onForceExpiry={handleForceExpiryUpdate}  // ✅ ADDED - Pass the force expiry handler
         />
 
         <main className="p-6">
@@ -214,60 +268,82 @@ export default function AdminDashboard() {
 
           {/* Charts */}
           <div className="grid lg:grid-cols-2 gap-6">
+            {/* Revenue Chart - Now with REAL data */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <TrendingUp size={20} className="text-red-500" />
                 {getText('dashboard.revenueOverview', 'Revenue Overview')}
               </h3>
-              <ResponsiveContainer width="100%" height={320}>
-                <AreaChart data={revenueData}>
-                  <defs>
-                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
-                  <YAxis stroke="#6b7280" fontSize={12} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px' }}
-                    formatter={(value: number) => [`₹${value.toLocaleString()}`, getText('admin.monthlyRevenue', 'Monthly Revenue')]}
-                  />
-                  <Legend />
-                  <Area type="monotone" dataKey="revenue" stroke="#ef4444" fill="url(#colorRevenue)" name={getText('admin.monthlyRevenue', 'Monthly Revenue')} />
-                </AreaChart>
-              </ResponsiveContainer>
+              {revenueData.every(item => item.revenue === 0) ? (
+                <div className="h-[320px] flex items-center justify-center text-gray-500">
+                  <div className="text-center">
+                    <TrendingUp size={48} className="mx-auto text-gray-300 mb-3" />
+                    <p>No revenue data available yet</p>
+                    <p className="text-sm text-gray-400">Revenue will appear when memberships are sold</p>
+                  </div>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={320}>
+                  <AreaChart data={revenueData}>
+                    <defs>
+                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
+                    <YAxis stroke="#6b7280" fontSize={12} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px' }}
+                      formatter={(value: number) => [`₹${value.toLocaleString()}`, getText('admin.monthlyRevenue', 'Monthly Revenue')]}
+                    />
+                    <Legend />
+                    <Area type="monotone" dataKey="revenue" stroke="#ef4444" fill="url(#colorRevenue)" name={getText('admin.monthlyRevenue', 'Monthly Revenue')} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              )}
             </div>
 
+            {/* Membership Distribution Chart - Now with REAL data */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <PieChartIcon size={20} className="text-red-500" />
                 {getText('dashboard.membershipDistribution', 'Membership Distribution')}
               </h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={membershipData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => percent > 0 ? `${name}: ${(percent * 100).toFixed(0)}%` : ''}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {membershipData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px' }}
-                    formatter={(value: number) => [`${value} ${getText('common.members', 'members')}`, getText('common.count', 'Count')]}
-                  />
-                  <Legend verticalAlign="bottom" height={36} />
-                </PieChart>
-              </ResponsiveContainer>
+              {planDistribution.length === 0 && stats.totalMembers === 0 ? (
+                <div className="h-[300px] flex items-center justify-center text-gray-500">
+                  <div className="text-center">
+                    <PieChartIcon size={48} className="mx-auto text-gray-300 mb-3" />
+                    <p>No membership data available yet</p>
+                    <p className="text-sm text-gray-400">Data will appear when members join</p>
+                  </div>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={membershipData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => percent > 0 ? `${name}: ${(percent * 100).toFixed(0)}%` : ''}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {membershipData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px' }}
+                      formatter={(value: number) => [`${value} ${getText('common.members', 'members')}`, getText('common.count', 'Count')]}
+                    />
+                    <Legend verticalAlign="bottom" height={36} />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">{getText('admin.totalMembers', 'Total Members')}</span>
