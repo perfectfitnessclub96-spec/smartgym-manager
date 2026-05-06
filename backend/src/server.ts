@@ -177,13 +177,14 @@ if (config.nodeEnv !== 'production') {
 
 // Health check
 app.get('/api/health', (req, res) => {
-  const dbState = mongoose.connection.readyState;
-  const dbStatus = {
-    0: 'disconnected',
-    1: 'connected',
-    2: 'connecting',
-    3: 'disconnecting'
-  }[dbState] || 'unknown';
+const dbState = mongoose.connection.readyState;
+const dbStatusMap: { [key: number]: string } = {
+  0: 'disconnected',
+  1: 'connected',
+  2: 'connecting',
+  3: 'disconnecting'
+};
+const dbStatus = dbStatusMap[dbState] || 'unknown';
   
   res.json({
     status: 'OK',

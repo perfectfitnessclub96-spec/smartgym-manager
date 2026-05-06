@@ -62,7 +62,7 @@ async function seedServices() {
     
     const insertedServices = await WellnessService.find();
     console.log('\nAvailable Services:');
-    insertedServices.forEach(service => {
+   insertedServices.forEach((service: any) => {
       console.log(`  - ${service.name} (${service.duration} mins) - Member: Free, Guest: ₹${service.priceForGuest}`);
     });
     

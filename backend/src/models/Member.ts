@@ -37,12 +37,12 @@ const MemberSchema = new Schema({
     sparse: true,
     unique: true
   },
-  photo: {
-    type: String,
-    default: function() {
-      return `https://ui-avatars.com/api/?background=ef4444&color=fff&name=${encodeURIComponent(this.name || 'User')}&length=2&size=120&font-size=40&bold=true`;
-    }
-  },
+photo: {
+  type: String,
+  default: function() {
+    return `https://ui-avatars.com/api/?background=ef4444&color=fff&name=${encodeURIComponent(this.name)}&length=2&size=120&font-size=40&bold=true`;
+  }
+},
   address: {
     type: String,
     trim: true
