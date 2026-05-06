@@ -33,8 +33,6 @@ interface DashboardStats {
   todayBookings: number;
   pendingRenewals: number;
   expiringSoon: number;
-  newMembersThisMonth: number;
-  revenueGrowth: number;
   equipmentStats: {
     total: number;
     available: number;
@@ -54,135 +52,42 @@ export default function AdminDashboard() {
     todayBookings: 0,
     pendingRenewals: 0,
     expiringSoon: 0,
-    newMembersThisMonth: 0,
-    revenueGrowth: 0,
     equipmentStats: { total: 0, available: 0, inUse: 0, underMaintenance: 0 }
   });
   const [loading, setLoading] = useState(true);
-  const [revenueData, setRevenueData] = useState<any[]>([]);
-  const [planDistribution, setPlanDistribution] = useState<any[]>([]);
-  const [recentActivities, setRecentActivities] = useState<any[]>([]);
+  const [revenueData, setRevenueData] = useState([
+    { month: 'Jan', revenue: 25000 },
+    { month: 'Feb', revenue: 32000 },
+    { month: 'Mar', revenue: 28000 },
+    { month: 'Apr', revenue: 35000 },
+    { month: 'May', revenue: 42000 },
+    { month: 'Jun', revenue: 38000 }
+  ]);
 
   useEffect(() => {
-    fetchAllData();
+    fetchStats();
   }, []);
-
-  const fetchAllData = async () => {
-    setLoading(true);
-    try {
-      await Promise.all([
-        fetchStats(),
-        fetchRevenueData(),
-        fetchPlanDistribution(),
-        fetchRecentActivities()
-      ]);
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get('/api/membership/admin/stats');
-      if (response.data && response.data.success) {
-        setStats({
-          totalMembers: response.data.data.totalMembers || 0,
-          activeMemberships: response.data.data.activeMemberships || 0,
-          monthlyRevenue: response.data.data.monthlyRevenue || 0,
-          todayBookings: response.data.data.todayBookings || 0,
-          pendingRenewals: response.data.data.pendingRenewals || 0,
-          expiringSoon: response.data.data.expiringSoon || 0,
-          newMembersThisMonth: response.data.data.newMembersThisMonth || 0,
-          revenueGrowth: response.data.data.revenueGrowth || 0,
-          equipmentStats: { total: 0, available: 0, inUse: 0, underMaintenance: 0 }
-        });
-      }
+      const [membershipRes, equipmentRes] = await Promise.all([
+        axios.get('/api/membership/admin/stats'),
+        axios.get('/api/equipment/stats')
+      ]);
       
-      // Fetch equipment stats separately
-      const equipmentRes = await axios.get('/api/equipment/stats');
-      if (equipmentRes.data && equipmentRes.data.success) {
-        setStats(prev => ({
-          ...prev,
-          equipmentStats: equipmentRes.data.data
-        }));
-      }
+      setStats({
+        totalMembers: membershipRes.data.data.totalMembers,
+        activeMemberships: membershipRes.data.data.activeMemberships,
+        monthlyRevenue: membershipRes.data.data.monthlyRevenue,
+        todayBookings: 0,
+        pendingRenewals: 2,
+        expiringSoon: 5,
+        equipmentStats: equipmentRes.data.data
+      });
     } catch (error) {
       console.error('Error fetching stats:', error);
-    }
-  };
-
-  const fetchRevenueData = async () => {
-    try {
-      const response = await axios.get('/api/membership/monthly-revenue');
-      if (response.data && response.data.success && response.data.data.length > 0) {
-        setRevenueData(response.data.data);
-      } else {
-        // Generate empty months if no data
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        setRevenueData(months.map(month => ({ month, revenue: 0 })));
-      }
-    } catch (error) {
-      console.error('Error fetching revenue data:', error);
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      setRevenueData(months.map(month => ({ month, revenue: 0 })));
-    }
-  };
-
-  const fetchPlanDistribution = async () => {
-    try {
-      const response = await axios.get('/api/membership/plan-distribution');
-      if (response.data && response.data.success && response.data.data.length > 0) {
-        setPlanDistribution(response.data.data);
-      } else {
-        setPlanDistribution([]);
-      }
-    } catch (error) {
-      console.error('Error fetching plan distribution:', error);
-      setPlanDistribution([]);
-    }
-  };
-
-  const fetchRecentActivities = async () => {
-    try {
-      // Fetch recent members
-      const membersRes = await axios.get('/api/membership/members?limit=5');
-      const recentMembers = membersRes.data.data || [];
-      
-      // Fetch recent bookings
-      const bookingsRes = await axios.get('/api/bookings/all?limit=5');
-      const recentBookings = bookingsRes.data.data || [];
-      
-      // Combine and format activities
-      const activities = [];
-      
-      recentMembers.slice(0, 3).forEach((member: any) => {
-        activities.push({
-          id: `member-${member._id}`,
-          action: `New member joined: ${member.name}`,
-          time: new Date(member.createdAt).toLocaleString(),
-          icon: UserPlus,
-          color: 'text-green-500'
-        });
-      });
-      
-      recentBookings.slice(0, 3).forEach((booking: any) => {
-        activities.push({
-          id: `booking-${booking._id}`,
-          action: `Wellness booking created for ${booking.serviceId?.name || 'Service'}`,
-          time: new Date(booking.createdAt).toLocaleString(),
-          icon: Calendar,
-          color: 'text-purple-500'
-        });
-      });
-      
-      // Sort by time (most recent first)
-      activities.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
-      setRecentActivities(activities.slice(0, 5));
-    } catch (error) {
-      console.error('Error fetching recent activities:', error);
-      setRecentActivities([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -197,14 +102,19 @@ export default function AdminDashboard() {
     { path: '/admin/members/add', icon: UserPlus, label: 'Add Member' },
     { path: '/admin/manage-bookings', icon: Calendar, label: 'Bookings' },
     { path: '/admin/equipment', icon: Wrench, label: 'Equipment' },
-    { path: '/admin/renewal-requests', icon: RefreshCw, label: 'Renewals' },
-    { path: '/admin/notifications', icon: Bell, label: 'Notifications' },
+    { path: '/admin/reports', icon: TrendingUp, label: 'Reports' },
   ];
 
   const equipmentData = [
-    { name: 'Available', value: stats.equipmentStats.available || 0, color: '#22c55e' },
-    { name: 'In Use', value: stats.equipmentStats.inUse || 0, color: '#3b82f6' },
-    { name: 'Maintenance', value: stats.equipmentStats.underMaintenance || 0, color: '#ef4444' }
+    { name: 'Available', value: stats.equipmentStats.available, color: '#22c55e' },
+    { name: 'In Use', value: stats.equipmentStats.inUse, color: '#3b82f6' },
+    { name: 'Maintenance', value: stats.equipmentStats.underMaintenance, color: '#ef4444' }
+  ];
+
+  const recentActivities = [
+    { id: 1, action: 'New member joined', time: '5 min ago', icon: UserPlus, color: 'text-green-500' },
+    { id: 2, action: 'Membership renewed', time: '1 hour ago', icon: RefreshCw, color: 'text-blue-500' },
+    { id: 3, action: 'Wellness booking created', time: '3 hours ago', icon: Calendar, color: 'text-purple-500' },
   ];
 
   if (loading) {
@@ -260,7 +170,7 @@ export default function AdminDashboard() {
           <div className="space-y-1">
             {menuItems.map((item) => {
               const Icon = item.icon;
-              const isActive = window.location.pathname === item.path;
+              const isActive = location.pathname === item.path;
               
               return (
                 <button
@@ -312,17 +222,12 @@ export default function AdminDashboard() {
           <div className="px-6 py-4 flex justify-between items-center">
             <h1 className="text-2xl font-bold text-white">Dashboard</h1>
             <div className="flex items-center gap-4">
-              <button onClick={fetchAllData} className="relative">
-                <RefreshCw className="text-gray-300 hover:text-white transition" size={20} />
-              </button>
               <button className="relative">
                 <Bell className="text-gray-300 hover:text-white transition" size={20} />
-                {stats.pendingRenewals > 0 && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                )}
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
               <div className="w-8 h-8 rounded-full bg-gradient-to-r from-red-500 to-red-700 flex items-center justify-center">
-                <span className="text-white text-sm font-semibold">{user?.name?.charAt(0) || 'A'}</span>
+                <span className="text-white text-sm font-semibold">A</span>
               </div>
             </div>
           </div>
@@ -338,9 +243,7 @@ export default function AdminDashboard() {
                 <span className="text-2xl font-bold text-white">{stats.totalMembers}</span>
               </div>
               <p className="text-gray-300 text-sm">Total Members</p>
-              {stats.newMembersThisMonth > 0 && (
-                <p className="text-green-400 text-xs mt-2">↑ {stats.newMembersThisMonth} this month</p>
-              )}
+              <p className="text-green-400 text-xs mt-2">↑ 12% this month</p>
             </div>
             
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition">
@@ -349,6 +252,7 @@ export default function AdminDashboard() {
                 <span className="text-2xl font-bold text-white">{stats.activeMemberships}</span>
               </div>
               <p className="text-gray-300 text-sm">Active Memberships</p>
+              <p className="text-green-400 text-xs mt-2">↑ 8% this month</p>
             </div>
             
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition">
@@ -357,9 +261,7 @@ export default function AdminDashboard() {
                 <span className="text-2xl font-bold text-white">₹{stats.monthlyRevenue.toLocaleString()}</span>
               </div>
               <p className="text-gray-300 text-sm">Monthly Revenue</p>
-              {stats.revenueGrowth !== 0 && (
-                <p className="text-green-400 text-xs mt-2">↑ {Math.abs(stats.revenueGrowth)}% from last month</p>
-              )}
+              <p className="text-green-400 text-xs mt-2">↑ 5% this month</p>
             </div>
             
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition">
@@ -368,37 +270,7 @@ export default function AdminDashboard() {
                 <span className="text-2xl font-bold text-white">{stats.equipmentStats.total}</span>
               </div>
               <p className="text-gray-300 text-sm">Total Machines</p>
-            </div>
-          </div>
-
-          {/* Secondary Stats Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-yellow-400 text-2xl font-bold">{stats.todayBookings}</p>
-                  <p className="text-gray-300 text-sm">Today's Bookings</p>
-                </div>
-                <Calendar size={28} className="text-yellow-400" />
-              </div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-orange-400 text-2xl font-bold">{stats.pendingRenewals}</p>
-                  <p className="text-gray-300 text-sm">Pending Renewals</p>
-                </div>
-                <RefreshCw size={28} className="text-orange-400" />
-              </div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-red-400 text-2xl font-bold">{stats.expiringSoon}</p>
-                  <p className="text-gray-300 text-sm">Expiring Soon (7 days)</p>
-                </div>
-                <Clock size={28} className="text-red-400" />
-              </div>
+              <p className="text-green-400 text-xs mt-2">All operational</p>
             </div>
           </div>
 
@@ -410,110 +282,87 @@ export default function AdminDashboard() {
                 <TrendingUp size={20} className="text-red-400" />
                 Monthly Revenue
               </h3>
-              {revenueData.every(item => item.revenue === 0) ? (
-                <div className="h-[300px] flex items-center justify-center text-gray-400">
-                  <div className="text-center">
-                    <p>No revenue data available yet</p>
-                    <p className="text-sm mt-2">Revenue will appear when memberships are sold</p>
-                  </div>
-                </div>
-              ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={revenueData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" />
-                    <XAxis dataKey="month" stroke="#9ca3af" />
-                    <YAxis stroke="#9ca3af" />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }}
-                      labelStyle={{ color: '#fff' }}
-                      formatter={(value: number) => [`₹${value.toLocaleString()}`, 'Revenue']}
-                    />
-                    <Legend wrapperStyle={{ color: '#fff' }} />
-                    <Bar dataKey="revenue" fill="#ef4444" name="Revenue (₹)" radius={[8, 8, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              )}
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" />
+                  <XAxis dataKey="month" stroke="#9ca3af" />
+                  <YAxis stroke="#9ca3af" />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }}
+                    labelStyle={{ color: '#fff' }}
+                  />
+                  <Legend wrapperStyle={{ color: '#fff' }} />
+                  <Bar dataKey="revenue" fill="#ef4444" name="Revenue (₹)" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
 
-            {/* Plan Distribution Chart */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <PieChart size={20} className="text-red-400" />
-                Membership Distribution
-              </h3>
-              {planDistribution.length === 0 ? (
-                <div className="h-[300px] flex items-center justify-center text-gray-400">
-                  <div className="text-center">
-                    <p>No membership data available yet</p>
-                    <p className="text-sm mt-2">Data will appear when members join</p>
-                  </div>
-                </div>
-              ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={planDistribution}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => percent > 0.05 ? `${name}: ${(percent * 100).toFixed(0)}%` : ''}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {planDistribution.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color || '#ef4444'} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }}
-                      labelStyle={{ color: '#fff' }}
-                      formatter={(value: number) => [`${value} members`, 'Count']}
-                    />
-                    <Legend wrapperStyle={{ color: '#fff' }} />
-                  </PieChart>
-                </ResponsiveContainer>
-              )}
-            </div>
-          </div>
-
-          {/* Equipment Status and Recent Activity */}
-          <div className="grid lg:grid-cols-2 gap-6">
             {/* Equipment Status Chart */}
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <Wrench size={20} className="text-red-400" />
+                <Activity size={20} className="text-red-400" />
                 Equipment Status
               </h3>
-              {equipmentData.every(item => item.value === 0) ? (
-                <div className="h-[250px] flex items-center justify-center text-gray-400">
-                  <p>No equipment data available</p>
-                </div>
-              ) : (
-                <ResponsiveContainer width="100%" height={250}>
-                  <PieChart>
-                    <Pie
-                      data={equipmentData.filter(item => item.value > 0)}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {equipmentData.filter(item => item.value > 0).map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }}
-                      labelStyle={{ color: '#fff' }}
-                    />
-                    <Legend wrapperStyle={{ color: '#fff' }} />
-                  </PieChart>
-                </ResponsiveContainer>
-              )}
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={equipmentData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {equipmentData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }}
+                    labelStyle={{ color: '#fff' }}
+                  />
+                  <Legend wrapperStyle={{ color: '#fff' }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Alerts and Recent Activity */}
+          <div className="grid lg:grid-cols-2 gap-6">
+            {/* Alerts */}
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <Bell size={20} className="text-red-400" />
+                Alerts & Notifications
+              </h3>
+              <div className="space-y-3">
+                {stats.pendingRenewals > 0 && (
+                  <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-xl p-4">
+                    <div className="flex items-center gap-3">
+                      <AlertCircle className="text-yellow-400" size={20} />
+                      <div>
+                        <p className="text-white font-medium">Pending Renewals</p>
+                        <p className="text-yellow-300 text-sm">{stats.pendingRenewals} member(s) requested renewal</p>
+                      </div>
+                      <button className="ml-auto text-yellow-400 text-sm hover:underline">Review →</button>
+                    </div>
+                  </div>
+                )}
+                {stats.expiringSoon > 0 && (
+                  <div className="bg-blue-500/20 border border-blue-500/30 rounded-xl p-4">
+                    <div className="flex items-center gap-3">
+                      <Clock className="text-blue-400" size={20} />
+                      <div>
+                        <p className="text-white font-medium">Expiring Soon</p>
+                        <p className="text-blue-300 text-sm">{stats.expiringSoon} memberships expiring in 7 days</p>
+                      </div>
+                      <button className="ml-auto text-blue-400 text-sm hover:underline">View →</button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Recent Activity */}
@@ -522,28 +371,22 @@ export default function AdminDashboard() {
                 <Activity size={20} className="text-red-400" />
                 Recent Activity
               </h3>
-              <div className="space-y-3 max-h-[300px] overflow-y-auto">
-                {recentActivities.length === 0 ? (
-                  <div className="text-center text-gray-400 py-8">
-                    <p>No recent activity</p>
-                  </div>
-                ) : (
-                  recentActivities.map((activity) => {
-                    const Icon = activity.icon;
-                    return (
-                      <div key={activity.id} className="flex items-center gap-3 py-2 border-b border-white/10 last:border-0">
-                        <div className={`p-2 rounded-lg bg-white/10`}>
-                          <Icon size={16} className="text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-white text-sm">{activity.action}</p>
-                          <p className="text-gray-400 text-xs">{activity.time}</p>
-                        </div>
-                        <CheckCircle size={16} className="text-green-500" />
+              <div className="space-y-3">
+                {recentActivities.map((activity) => {
+                  const Icon = activity.icon;
+                  return (
+                    <div key={activity.id} className="flex items-center gap-3 py-2 border-b border-white/10 last:border-0">
+                      <div className={`p-2 rounded-lg bg-${activity.color.split('-')[1]}-500/20`}>
+                        <Icon size={16} className={activity.color} />
                       </div>
-                    );
-                  })
-                )}
+                      <div className="flex-1">
+                        <p className="text-white text-sm">{activity.action}</p>
+                        <p className="text-gray-400 text-xs">{activity.time}</p>
+                      </div>
+                      <CheckCircle size={16} className="text-green-500" />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

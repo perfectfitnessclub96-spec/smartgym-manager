@@ -1,9 +1,13 @@
 // src/config/axios.ts
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000';
+// ✅ FIX: Use environment variable for API URL
+// In development: http://localhost:5000
+// In production: https://your-backend.onrender.com
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 console.log('🔧 API Base URL:', API_URL);
+console.log('🔧 Environment:', import.meta.env.MODE);
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -33,9 +37,14 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
+    // ✅ IMPROVED: Better error messages for production
     if (error.code === 'ERR_NETWORK' || error.code === 'ERR_CONNECTION_REFUSED') {
-      console.error('❌ Cannot connect to server. Make sure backend is running on', API_URL);
-      alert('Cannot connect to server. Please make sure the backend server is running on port 5000');
+      console.error('❌ Cannot connect to server. Backend URL:', API_URL);
+      
+      // Only show alert in development mode
+      if (import.meta.env.MODE === 'development') {
+        alert('Cannot connect to server. Please make sure the backend server is running on port 5000');
+      }
     } else if (error.response?.status === 403) {
       console.error('❌ Authentication error');
     } else if (error.response?.status === 401) {
