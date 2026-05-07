@@ -42,8 +42,18 @@ const sanitizeString = (input: string): string => {
     .replace(/'/g, '&#39;')
     .trim();
 };
+// ✅ ADD THIS FUNCTION RIGHT HERE
+const sanitizeHtml = (input: string): string => {
+  if (!input) return '';
+  // Simple sanitization - removes script tags and dangerous attributes
+  return input
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+    .trim();
+};
 
 initTransporter();
+
 
 // OTP Email Template
 const getOTPTemplate = (otp: string, name: string) => {
